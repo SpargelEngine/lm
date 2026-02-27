@@ -9,8 +9,16 @@ wheels/
 # Virtual environments
 .venv
 
+# Local environment variables
+.env
+
 # Lock files
 uv.lock
 
-# Visual Studio Code
+# IDE & Editor
+*.swp
 .vscode/
+
+# Cache & Temporary files
+.ruff_cache/
+.tmp*
