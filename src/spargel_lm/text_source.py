@@ -35,7 +35,7 @@ class PlainTextSource(TextSourceModel):
 
 
 class ProcessSource(TextSourceModel):
-    """Process texts."""
+    """Apply operations to texts from sources."""
 
     type: Literal["process"]
     operations: list[Operation]
