@@ -16,14 +16,16 @@ build-backend = "uv_build"
 [project.optional-dependencies]
 cpu = ["torch>=2.10.0"]
 cu128 = ["torch>=2.10.0"]
+cu130 = ["torch>=2.10.0"]
 
 [tool.uv]
-conflicts = [[{ extra = "cpu" }, { extra = "cu128" }]]
+conflicts = [[{ extra = "cpu" }, { extra = "cu128" }, { extra = "cu130" }]]
 
 [tool.uv.sources]
 torch = [
     { index = "pytorch-cpu", extra = "cpu" },
     { index = "pytorch-cu128", extra = "cu128" },
+    { index = "pytorch-cu130", extra = "cu130" },
 ]
 spargel-lm = { workspace = true, editable = true }
 
@@ -35,6 +37,11 @@ explicit = true
 [[tool.uv.index]]
 name = "pytorch-cu128"
 url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cu130"
+url = "https://download.pytorch.org/whl/cu130"
 explicit = true
 
 [tool.uv.workspace]
