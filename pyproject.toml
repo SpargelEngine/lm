@@ -9,6 +9,10 @@ license-files = ["LICENSE"]
 
 dependencies = ["numpy>=2.4.2", "pydantic>=2.12.5", "regex>=2026.2.19"]
 
+[build-system]
+requires = ["uv_build>=0.10.7,<0.11.0"]
+build-backend = "uv_build"
+
 [project.optional-dependencies]
 cpu = ["torch>=2.10.0"]
 cu128 = ["torch>=2.10.0"]
@@ -21,6 +25,7 @@ torch = [
     { index = "pytorch-cpu", extra = "cpu" },
     { index = "pytorch-cu128", extra = "cu128" },
 ]
+spargel-lm = { workspace = true, editable = true }
 
 [[tool.uv.index]]
 name = "pytorch-cpu"
@@ -32,8 +37,11 @@ name = "pytorch-cu128"
 url = "https://download.pytorch.org/whl/cu128"
 explicit = true
 
+[tool.uv.workspace]
+members = ["."]
+
 [dependency-groups]
-dev = ["ipykernel>=7.2.0", "ruff>=0.15.4"]
+dev = ["ipykernel>=7.2.0", "ruff>=0.15.4", "spargel-lm"]
 
 [tool.ruff.lint]
 extend-select = ["I"]
