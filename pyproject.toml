@@ -1,0 +1,9 @@
+[project]
+name = "spargel-lm"
+version = "0.1.0"
+description = "A project for learning and testing language models"
+readme = "README.md"
+requires-python = ">=3.13"
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = []
