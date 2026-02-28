@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+
+  "title": "Text Operation",
+
+  "oneOf": [
+    { "$ref": "#/$defs/read_file_operation" },
+    { "$ref": "#/$defs/reference_operation" },
+    { "$ref": "#/$defs/replace_operation" },
+    { "$ref": "#/$defs/rstrip_operation" },
+    { "$ref": "#/$defs/split_lines_operation" },
+    { "$ref": "#/$defs/strip_operation" }
+  ],
+
+  "$defs": {
+    "comment": {
+      "description": "Any additional comment information",
+      "type": "string"
+    },
+    "read_file_operation": {
+      "description": "Read file content.",
+      "type": "object",
+      "properties": {
+        "type": { "const": "read_file" },
+        "comment": { "$ref": "#/$defs/comment" },
+        "base": {
+          "description": "Base path relative to which we find files (default: \".\")",
+          "type": "string"
+        },
+        "encoding": {
+          "description": "Encoding used by the files (if not provided, use platform-specific default encdoing)",
+          "type": "string"
+        },
+        "compression": {
+          "description": "Compression method used by the files",
+          "enum": ["gzip"]
+        }
+      },
+      "required": ["type"]
+    },
+    "reference_operation": {
+      "description": "Reference external operations.",
+      "type": "object",
+      "properties": {
+        "type": { "const": "ref" },
+        "comment": { "$ref": "#/$defs/comment" },
+        "base": {
+          "description": "Base path relative to which we find files (default: \".\")",
+          "type": "string"
+        },
+        "paths": {
+          "description": "Reference file paths",
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "required": ["type", "paths"]
+    },
+    "replace_operation": {
+      "description": "Replace All",
+      "type": "object",
+      "properties": {
+        "type": { "const": "replace" },
+        "comment": { "$ref": "#/$defs/comment" },
+        "regex": {
+          "description": "Use regular expression (default: false)",
+          "type": "boolean"
+        },
+        "old": { "description": "Old string/pattern", "type": "string" },
+        "new": { "description": "New string/pattern", "type": "string" },
+        "repeat": {
+          "description": "Repeat replacement until there are no changes (default: false).",
+          "type": "boolean"
+        },
+        "per_line": {
+          "description": "Do replacing in each line in the text (default: false).",
+          "type": "boolean"
+        }
+      },
+      "required": ["type", "old", "new"]
+    },
+    "rstrip_operation": {
+      "description": "Right-strip text (remove trailing whitespace).",
+      "type": "object",
+      "properties": {
+        "type": { "const": "rstrip" },
+        "comment": { "$ref": "#/$defs/comment" },
+        "chars": {
+          "description": "Characters to remove",
+          "type": "string"
+        },
+        "per_line": {
+          "description": "Right-strip each line in the text (default: false).",
+          "type": "boolean"
+        }
+      },
+      "required": ["type"]
+    },
+    "split_lines_operation": {
+      "description": "Split text into lines.",
+      "type": "object",
+      "properties": {
+        "type": { "const": "split_lines" },
+        "comment": { "$ref": "#/$defs/comment" },
+        "keep_ends": {
+          "description": "Whether to keep line breaks (default: false)",
+          "type": "boolean"
+        }
+      },
+      "required": ["type"]
+    },
+    "strip_operation": {
+      "description": "Strip text (remove leading and trailing whitespace).",
+      "type": "object",
+      "properties": {
+        "type": { "const": "strip" },
+        "comment": { "$ref": "#/$defs/comment" },
+        "chars": {
+          "description": "Characters to remove",
+          "type": "string"
+        },
+        "per_line": {
+          "description": "Strip each line in the text (default: false).",
+          "type": "boolean"
+        }
+      },
+      "required": ["type"]
+    }
+  }
+}

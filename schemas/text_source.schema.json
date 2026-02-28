@@ -4,16 +4,48 @@
   "title": "Text Source",
 
   "oneOf": [
+    { "$ref": "#/$defs/find_file_source" },
     { "$ref": "#/$defs/plain_text_source" },
     { "$ref": "#/$defs/process_source" }
   ],
 
   "$defs": {
+    "comment": {
+      "description": "Any additional comment information",
+      "type": "string"
+    },
+    "find_file_source": {
+      "description": "Find files in a directory.",
+      "type": "object",
+      "properties": {
+        "type": { "const": "find" },
+        "comment": { "$ref": "#/$defs/comment" },
+        "base": {
+          "description": "Base directory for all subpaths (default: \".\")",
+          "type": "string"
+        },
+        "paths": {
+          "description": "Subpaths to search (default: [\".\"])",
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "file_pattern": {
+          "description": "Regex for file names",
+          "type": "string"
+        },
+        "dir_pattern": {
+          "description": "Regex for directory names",
+          "type": "string"
+        }
+      },
+      "required": ["type"]
+    },
     "plain_text_source": {
       "description": "Provide a list of plain texts directly.",
       "type": "object",
       "properties": {
         "type": { "const": "text" },
+        "comment": { "$ref": "#/$defs/comment" },
         "texts": {
           "description": "Texts",
           "type": "array",
@@ -27,10 +59,11 @@
       "type": "object",
       "properties": {
         "type": { "const": "process" },
+        "comment": { "$ref": "#/$defs/comment" },
         "operations": {
           "description": "Operations to be applied",
           "type": "array",
-          "items": { "$ref": "#/$defs/operation" }
+          "items": { "$ref": "./operation.schema.json" }
         },
         "sources": {
           "description": "Sources to which operations are applied",
@@ -39,70 +72,6 @@
         }
       },
       "required": ["type", "operations", "sources"]
-    },
-    "operation": {
-      "oneOf": [
-        { "$ref": "#/$defs/read_file_operation" },
-        { "$ref": "#/$defs/rstrip_operation" },
-        { "$ref": "#/$defs/split_lines_operation" },
-        { "$ref": "#/$defs/strip_operation" }
-      ]
-    },
-    "read_file_operation": {
-      "description": "Read file content.",
-      "type": "object",
-      "properties": {
-        "type": { "const": "read_file" },
-        "base": {
-          "description": "Base path relative to which we find files (default: \".\")",
-          "type": "string"
-        },
-        "encoding": {
-          "description": "Encoding used by the files",
-          "type": "string"
-        },
-        "compression": {
-          "description": "Compression method used by the files",
-          "enum": ["gzip"]
-        }
-      },
-      "required": ["type"]
-    },
-    "rstrip_operation": {
-      "description": "Right-strip text (remove trailing whitespace).",
-      "type": "object",
-      "properties": {
-        "type": { "const": "rstrip" },
-        "chars": {
-          "description": "Characters to remove",
-          "type": "string"
-        }
-      },
-      "required": ["type"]
-    },
-    "split_lines_operation": {
-      "description": "Split text into lines.",
-      "type": "object",
-      "properties": {
-        "type": { "const": "split_lines" },
-        "keep_ends": {
-          "description": "Whether to keep line breaks (default: false)",
-          "type": "boolean"
-        }
-      },
-      "required": ["type"]
-    },
-    "strip_operation": {
-      "description": "Strip text (remove leading and trailing whitespace).",
-      "type": "object",
-      "properties": {
-        "type": { "const": "strip" },
-        "chars": {
-          "description": "Characters to remove",
-          "type": "string"
-        }
-      },
-      "required": ["type"]
     }
   }
 }

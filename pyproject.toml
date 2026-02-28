@@ -1,6 +1,6 @@
 [project]
 name = "spargel-lm"
-version = "0.1.0"
+version = "0.1.1"
 description = "A project for learning and testing language models"
 readme = "README.md"
 requires-python = ">=3.14"
@@ -10,8 +10,8 @@ license-files = ["LICENSE"]
 dependencies = [
     "numpy>=2.4.2",
     "pydantic>=2.12.5",
-    "pytest>=9.0.2",
     "regex>=2026.2.19",
+    "tqdm>=4.67.3",
 ]
 
 [build-system]
@@ -53,7 +53,7 @@ explicit = true
 members = ["."]
 
 [dependency-groups]
-dev = ["ipykernel>=7.2.0", "ruff>=0.15.4", "spargel-lm"]
+dev = ["ipykernel>=7.2.0", "pytest>=9.0.2", "ruff>=0.15.4", "spargel-lm"]
 
 [tool.ruff.lint]
 extend-select = ["I"]
