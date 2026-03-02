@@ -11,6 +11,7 @@ class Embedding(nn.Module):
         vocab_size: Vocabulary size.
         dim: Dimension of embedding.
     """
+
     def __init__(self, vocab_size: int, dim: int):
         super().__init__()
         self.vocab_size = vocab_size
