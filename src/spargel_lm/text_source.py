@@ -252,7 +252,14 @@ class StripOperation(OperationModel):
             yield text.strip(self.chars)
 
 
-type Operation = ReadFileOperation | ReferenceOperation | ReplaceOperation | RightStripOperation | SplitLinesOperation | StripOperation
+type Operation = (
+    ReadFileOperation
+    | ReferenceOperation
+    | ReplaceOperation
+    | RightStripOperation
+    | SplitLinesOperation
+    | StripOperation
+)
 
 
 class OperationWrapperModel(BaseModel):
