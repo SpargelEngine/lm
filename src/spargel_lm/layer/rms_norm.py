@@ -1,8 +1,9 @@
+from typing import final, override
 import torch
-import torch.nn.functional as F
 from torch import nn
 
 
+@final
 class RMSNorm(nn.Module):
     """
     Root Mean Square Normalization (arXiv:1910.07467).
@@ -18,6 +19,7 @@ class RMSNorm(nn.Module):
         self.dimension = dimension
         self.weight = nn.Parameter(torch.ones(self.dimension))
 
+    @override
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         var = x.square().mean(-1, keepdim=True)
         y = x * torch.rsqrt(var + self.epsilon)

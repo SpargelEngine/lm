@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, final, override
 import torch
 import torch.nn.functional as F
 from torch import nn
@@ -6,6 +6,7 @@ from torch import nn
 type LinearInit = Literal["empty", "uniform"]
 
 
+@final
 class Linear(nn.Module):
     """
     Linear Layer.
@@ -36,6 +37,7 @@ class Linear(nn.Module):
             # TODO(tianjiao): We should make `a` and `b` configurable.
             nn.init.uniform_(self.weight, a=-1.0, b=1.0)
 
+    @override
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         y = F.linear(x, self.weight)
         return y

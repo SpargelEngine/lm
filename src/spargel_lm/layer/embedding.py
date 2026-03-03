@@ -1,8 +1,10 @@
+from typing import final, override
 import torch
 import torch.nn.functional as F
 from torch import nn
 
 
+@final
 class Embedding(nn.Module):
     """
     Embedding Layer.
@@ -22,6 +24,7 @@ class Embedding(nn.Module):
     def reset_parameters(self):
         nn.init.normal_(self.weight, mean=0.0, std=1.0)
 
+    @override
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         y = F.embedding(x, self.weight)
         return y
