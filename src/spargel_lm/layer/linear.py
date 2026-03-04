@@ -21,6 +21,7 @@ class Linear(nn.Module):
         self,
         input_dimension: int,
         output_dimension: int,
+        bias: bool = False,
         initialize: LinearInit = "uniform",
     ):
         super().__init__()
@@ -30,14 +31,17 @@ class Linear(nn.Module):
         self.weight = nn.Parameter(
             torch.empty(self.output_dimension, self.input_dimension)
         )
+        self.bias = nn.Parameter(torch.empty(self.output_dimension)) if bias else None
         self.reset_parameters()
 
     def reset_parameters(self):
         if self.initialize == "uniform":
             # TODO(tianjiao): We should make `a` and `b` configurable.
             nn.init.uniform_(self.weight, a=-1.0, b=1.0)
+            if self.bias is not None:
+                nn.init.uniform_(self.bias, a=-1.0,b=1.0)
 
     @override
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        y = F.linear(x, self.weight)
+        y = F.linear(x, self.weight, bias=self.bias)
         return y
