@@ -39,7 +39,7 @@ class Linear(nn.Module):
             # TODO(tianjiao): We should make `a` and `b` configurable.
             nn.init.uniform_(self.weight, a=-1.0, b=1.0)
             if self.bias is not None:
-                nn.init.uniform_(self.bias, a=-1.0,b=1.0)
+                nn.init.uniform_(self.bias, a=-1.0, b=1.0)
 
     @override
     def forward(self, x: torch.Tensor) -> torch.Tensor:

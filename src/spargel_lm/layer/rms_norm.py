@@ -13,7 +13,7 @@ class RMSNorm(nn.Module):
         epsilon: Epsilon value for numerical stability.
     """
 
-    def __init__(self, dimension: int, epsilon: float):
+    def __init__(self, dimension: int, epsilon: float = 1e-6):
         super().__init__()
         self.epsilon = epsilon
         self.dimension = dimension
