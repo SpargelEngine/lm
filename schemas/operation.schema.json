@@ -28,7 +28,7 @@
           "type": "string"
         },
         "encoding": {
-          "description": "Encoding used by the files (if not provided, use platform-specific default encdoing)",
+          "description": "Encoding used by the files (if not provided, use platform-specific default encoding)",
           "type": "string"
         },
         "compression": {

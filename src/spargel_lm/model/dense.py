@@ -1,12 +1,13 @@
 from typing import final, override
+
 import torch
 from torch import nn
 
-from spargel_lm.layer.rms_norm import RMSNorm
-from spargel_lm.layer.embedding import Embedding
-from spargel_lm.layer.linear import Linear
 from spargel_lm.layer.attention import MultiHeadAttention
+from spargel_lm.layer.embedding import Embedding
 from spargel_lm.layer.feed_forward import FeedForward
+from spargel_lm.layer.linear import Linear
+from spargel_lm.layer.rms_norm import RMSNorm
 from spargel_lm.torch_typing import apply_module
 
 

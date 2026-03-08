@@ -10,7 +10,7 @@ license-files = ["LICENSE"]
 dependencies = [
     "numpy>=2.4.2",
     "pydantic>=2.12.5",
-    "regex>=2026.2.19",
+    "regex>=2026.2.28",
     "tqdm>=4.67.3",
 ]
 
@@ -53,7 +53,7 @@ explicit = true
 members = ["."]
 
 [dependency-groups]
-dev = ["ipykernel>=7.2.0", "pytest>=9.0.2", "ruff>=0.15.4", "spargel-lm"]
+dev = ["ipykernel>=7.2.0", "pytest>=9.0.2", "ruff>=0.15.5", "spargel-lm"]
 
 [tool.ruff.lint]
 extend-select = ["I"]

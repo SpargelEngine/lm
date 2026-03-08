@@ -1,4 +1,5 @@
 from typing import final, override
+
 import torch
 from torch import nn
 

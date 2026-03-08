@@ -9,7 +9,7 @@ import regex
 from pydantic import BaseModel, Field
 from regex import Pattern
 
-from .typing import StrOrPath
+from spargel_lm.typing import StrOrPath
 
 logger = logging.getLogger(__name__)
 

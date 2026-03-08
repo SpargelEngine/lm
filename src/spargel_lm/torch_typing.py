@@ -1,4 +1,5 @@
 from typing import Callable, Protocol, Self
+
 import torch
 
 
