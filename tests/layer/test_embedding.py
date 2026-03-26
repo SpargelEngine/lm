@@ -1,15 +1,15 @@
 import torch
+from torch import nn
 
 from spargel_lm.layer.embedding import Embedding
 
 
-def test_embedding_shape():
-    layer = Embedding(3, 2)
+def test_embedding_matches_torch_embedding():
+    layer = Embedding(vocab_size=5, dim=3).double()
+    reference = nn.Embedding(num_embeddings=5, embedding_dim=3).double()
 
-    input = torch.tensor([0, 2, 1])
-    output = layer(input)
-    assert output.shape == (3, 2)
+    with torch.no_grad():
+        reference.weight.copy_(layer.weight)
 
-    input = torch.tensor([1, 0, 2, 1, 1, 2, 0])
-    output = layer(input)
-    assert output.shape == (7, 2)
+    input_ids = torch.tensor([[0, 2, 1], [4, 1, 3]])
+    torch.testing.assert_close(layer(input_ids), reference(input_ids))

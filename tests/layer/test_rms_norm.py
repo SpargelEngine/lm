@@ -1,33 +1,18 @@
 import torch
-import torch.nn.functional as F
+from torch import nn
 
 from spargel_lm.layer.rms_norm import RMSNorm
 
 
-def test_rms_norm_preserves_input_shape():
-    layer = RMSNorm(dimension=4, epsilon=1e-5)
+def test_rms_norm_matches_torch_rms_norm():
+    layer = RMSNorm(dimension=4, epsilon=1e-5).double()
+    reference = nn.RMSNorm(normalized_shape=4, eps=1e-5).double()
 
-    x = torch.randn(2, 3, 4)
-    y = layer(x)
+    with torch.no_grad():
+        reference.weight.copy_(layer.weight)
 
-    assert y.shape == x.shape
-
-
-def test_rms_norm_matches_reference_formula():
-    layer = RMSNorm(dimension=3, epsilon=1e-5)
-    layer.weight.data = torch.tensor([1.5, 2.0, 0.5])
-
-    x = torch.tensor([[1.0, 2.0, 3.0], [0.5, -1.0, 2.0]])
-    y = layer(x)
-
-    expected = F.rms_norm(
-        x,
-        normalized_shape=(layer.dimension,),
-        weight=layer.weight,
-        eps=layer.epsilon,
-    )
-
-    assert torch.allclose(y, expected)
+    x = torch.randn(2, 3, 4, dtype=torch.float64)
+    torch.testing.assert_close(layer(x), reference(x))
 
 
 def test_rms_norm_zero_input_is_finite():
