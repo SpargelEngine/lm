@@ -116,7 +116,7 @@ class DenseModel(nn.Module):
         )
 
     @override
-    def forward(self, x: torch.Tensor, mask: torch.Tensor):
+    def forward(self, x: torch.Tensor, mask: torch.Tensor | None = None):
         seq_len = x.size(1)
         if seq_len > self.max_position_embeddings:
             raise ValueError(
