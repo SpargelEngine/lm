@@ -32,10 +32,10 @@ class DenseBlock(nn.Module):
         self.prenorm_2 = RMSNorm(dimension=self.hidden_dim)
 
         self.attention = MultiHeadAttention(
-            dim=self.hidden_dim,
+            feature_dim=self.hidden_dim,
             num_heads=self.num_heads,
-            qk_head_dim=self.head_dim,
-            v_head_dim=self.head_dim,
+            qk_dim=self.head_dim,
+            v_dim=self.head_dim,
         )
         self.feed_forward = FeedForward(
             dimension=self.hidden_dim, hidden_dimension=self.mlp_dim

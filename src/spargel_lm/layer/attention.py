@@ -9,7 +9,7 @@ from spargel_lm.layer.linear import Linear
 from spargel_lm.torch_typing import apply_module
 
 
-def generic_attention(
+def attention(
     q: torch.Tensor,
     k: torch.Tensor,
     v: torch.Tensor,
@@ -67,30 +67,34 @@ class MultiHeadAttention(nn.Module):
     Attributes:
         dim: Feature dimension.
         num_heads: Number of attention heads.
-        qk_head_dim: Dimension of query/key.
-        v_head_dim: Dimension of value.
+        qk_dim: Dimension of query/key.
+        v_dim: Dimension of value.
     """
 
-    def __init__(self, dim: int, num_heads: int, qk_head_dim: int, v_head_dim: int):
+    def __init__(self, *, feature_dim: int, num_heads: int, qk_dim: int, v_dim: int):
         super().__init__()
-        self.dim = dim
         self.num_heads = num_heads
-        self.qk_head_dim = qk_head_dim
-        self.v_head_dim = v_head_dim
+        self.feature_dim = feature_dim
+        self.qk_dim = qk_dim
+        self.v_dim = v_dim
 
-        self.softmax_scale = math.pow(self.qk_head_dim, -0.5)
+        self.softmax_scale = math.pow(self.qk_dim, -0.5)
 
         self.W_q = Linear(
-            input_dimension=self.dim, output_dimension=self.num_heads * self.qk_head_dim
+            input_dimension=self.feature_dim,
+            output_dimension=self.num_heads * self.qk_dim,
         )
         self.W_k = Linear(
-            input_dimension=self.dim, output_dimension=self.num_heads * self.qk_head_dim
+            input_dimension=self.feature_dim,
+            output_dimension=self.num_heads * self.qk_dim,
         )
         self.W_v = Linear(
-            input_dimension=self.dim, output_dimension=self.num_heads * self.v_head_dim
+            input_dimension=self.feature_dim,
+            output_dimension=self.num_heads * self.v_dim,
         )
         self.W_o = Linear(
-            input_dimension=self.num_heads * self.v_head_dim, output_dimension=self.dim
+            input_dimension=self.num_heads * self.v_dim,
+            output_dimension=self.feature_dim,
         )
 
     # TODO(tianjiao): Support block mask.
@@ -105,7 +109,7 @@ class MultiHeadAttention(nn.Module):
             mask (batch_size, seq_len) dtype=bool: `True` means masked. This is padding mask.
         """
         batch_size, seq_len, dim = x.size()
-        assert dim == self.dim
+        assert dim == self.feature_dim
 
         # q, k : (batch_size, seq_len, num_heads * qk_head_dim)
         # v : (batch_size, seq_len, num_heads * v_head_dim)
@@ -115,9 +119,9 @@ class MultiHeadAttention(nn.Module):
 
         # q, k : (batch_size, seq_len, num_heads, qk_head_dim)
         # v : (batch_size, seq_len, num_heads, v_head_dim)
-        q = q.view(batch_size, seq_len, self.num_heads, self.qk_head_dim)
-        k = k.view(batch_size, seq_len, self.num_heads, self.qk_head_dim)
-        v = v.view(batch_size, seq_len, self.num_heads, self.v_head_dim)
+        q = q.view(batch_size, seq_len, self.num_heads, self.qk_dim)
+        k = k.view(batch_size, seq_len, self.num_heads, self.qk_dim)
+        v = v.view(batch_size, seq_len, self.num_heads, self.v_dim)
 
         # q, k : (batch_size, num_heads, seq_len, qk_head_dim)
         # v : (batch_size, num_heads, seq_len, v_head_dim)
@@ -148,15 +152,13 @@ class MultiHeadAttention(nn.Module):
 
         # It happens that `num_q == num_kv`.
         # result : (batch_size, num_heads, seq_len, v_head_dim)
-        result = generic_attention(
-            q, k, v, softmax_scale=self.softmax_scale, mask=final_mask
-        )
+        result = attention(q, k, v, softmax_scale=self.softmax_scale, mask=final_mask)
 
         # result : (batch_size, seq_len, num_heads, v_head_dim)
         result = result.transpose(1, 2)
         # NOTE: Use `reshape` since `transpose` can make tensor layout non-contiguous.
         # result : (batch_size, seq_len, num_heads * v_head_dim)
-        result = result.reshape(batch_size, seq_len, self.num_heads * self.v_head_dim)
+        result = result.reshape(batch_size, seq_len, self.num_heads * self.v_dim)
 
         return apply_module(self.W_o)(result)
 
