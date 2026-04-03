@@ -4,7 +4,6 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
-from spargel_lm.layer.linear import Linear
 from spargel_lm.torch_typing import apply_module
 
 
@@ -22,14 +21,14 @@ class FeedForward(nn.Module):
         super().__init__()
         self.dimension = dimension
         self.hidden_dimension = hidden_dimension
-        self.linear_1 = Linear(
-            input_dimension=self.dimension,
-            output_dimension=self.hidden_dimension,
+        self.linear_1 = nn.Linear(
+            self.dimension,
+            self.hidden_dimension,
             bias=True,
         )
-        self.linear_2 = Linear(
-            input_dimension=self.hidden_dimension,
-            output_dimension=self.dimension,
+        self.linear_2 = nn.Linear(
+            self.hidden_dimension,
+            self.dimension,
             bias=True,
         )
 

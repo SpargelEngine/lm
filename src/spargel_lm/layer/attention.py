@@ -5,7 +5,6 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
-from spargel_lm.layer.linear import Linear
 from spargel_lm.torch_typing import apply_module
 
 
@@ -73,6 +72,7 @@ class MultiHeadAttention(nn.Module):
 
     def __init__(self, *, feature_dim: int, num_heads: int, qk_dim: int, v_dim: int):
         super().__init__()
+
         self.num_heads = num_heads
         self.feature_dim = feature_dim
         self.qk_dim = qk_dim
@@ -80,21 +80,21 @@ class MultiHeadAttention(nn.Module):
 
         self.softmax_scale = math.pow(self.qk_dim, -0.5)
 
-        self.W_q = Linear(
-            input_dimension=self.feature_dim,
-            output_dimension=self.num_heads * self.qk_dim,
+        self.W_q = nn.Linear(self.feature_dim, self.num_heads * self.qk_dim, bias=False)
+        self.W_k = nn.Linear(
+            self.feature_dim,
+            self.num_heads * self.qk_dim,
+            bias=False,
         )
-        self.W_k = Linear(
-            input_dimension=self.feature_dim,
-            output_dimension=self.num_heads * self.qk_dim,
+        self.W_v = nn.Linear(
+            self.feature_dim,
+            self.num_heads * self.v_dim,
+            bias=False,
         )
-        self.W_v = Linear(
-            input_dimension=self.feature_dim,
-            output_dimension=self.num_heads * self.v_dim,
-        )
-        self.W_o = Linear(
-            input_dimension=self.num_heads * self.v_dim,
-            output_dimension=self.feature_dim,
+        self.W_o = nn.Linear(
+            self.num_heads * self.v_dim,
+            self.feature_dim,
+            bias=False,
         )
 
     # TODO(tianjiao): Support block mask.

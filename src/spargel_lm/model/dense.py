@@ -6,7 +6,6 @@ from torch import nn
 from spargel_lm.layer.attention import MultiHeadAttention
 from spargel_lm.layer.embedding import Embedding
 from spargel_lm.layer.feed_forward import FeedForward
-from spargel_lm.layer.linear import Linear
 from spargel_lm.layer.rms_norm import RMSNorm
 from spargel_lm.torch_typing import apply_module
 
@@ -111,8 +110,10 @@ class DenseModel(nn.Module):
             ]
         )
         # TODO(tianjiao): Use `bias` or not.
-        self.proj = Linear(
-            input_dimension=self.hidden_dim, output_dimension=self.vocab_size
+        self.proj = nn.Linear(
+            self.hidden_dim,
+            self.vocab_size,
+            bias=False,
         )
 
     @override
